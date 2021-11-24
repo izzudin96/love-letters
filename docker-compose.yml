@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      args:
+        user: love-letter_user
+        uid: 1000
+      context: ./
+      dockerfile: Dockerfile
+    container_name: love-letter-app
+    restart: unless-stopped
+    working_dir: /var/www/
+    volumes:
+      - ./app:/var/www
