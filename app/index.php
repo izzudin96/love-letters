@@ -1,3 +1,13 @@
 <?php
 
-phpinfo();
+require __DIR__.'/vendor/autoload.php';
+
+use App\Commands\EmailQuoteCommand;
+use Symfony\Component\Console\Application;
+
+$application  = new Application();
+
+$application->add(new EmailQuoteCommand());
+
+$application->run();
+
