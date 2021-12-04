@@ -18,11 +18,11 @@ class SendQuoteToTelegram extends Command
     const API_URL = "https://quotes.rest/";
     const TELEGRAM_URI = 'https://api.telegram.org/bot';
 
+    private string $quote;
+    private mixed $client;
     private string $bot_id;
     private string $chat_id;
-    private string $quote;
     private string $category;
-    private mixed $client;
 
     protected function configure()
     {
