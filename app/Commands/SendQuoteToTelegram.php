@@ -23,6 +23,7 @@ class SendQuoteToTelegram extends Command
     private string $bot_id;
     private string $chat_id;
     private string $category;
+    private string $prefix;
 
     protected function configure()
     {
@@ -38,6 +39,7 @@ class SendQuoteToTelegram extends Command
 
         try {
             $this->fetchQuote();
+            $this->setDate();
             $this->sendTelegramMessage();
         } catch (GuzzleException $e) {
             $output->writeln($e->getMessage());
@@ -61,8 +63,9 @@ class SendQuoteToTelegram extends Command
             ]]
         );
 
-        $this->quote = $response->getBody()->getContents();
-        $this->quote = $this->quote->quote;
+        $content = $response->getBody()->getContents();
+        $content = json_decode($content);
+        $this->quote = $content->contents->quotes[0]->quote;
     }
 
     /**
@@ -72,10 +75,21 @@ class SendQuoteToTelegram extends Command
     {
         $this->client = new Client();
 
+        $text = "$this->prefix: $this->quote";
+
         $this->client->request(
             'GET',
             self::TELEGRAM_URI . $this->bot_id . DIRECTORY_SEPARATOR . 'sendMessage?' .
-            'chat_id=' . $this->chat_id . '&text=' . $this->quote,
+            'chat_id=' . $this->chat_id . '&text=' . $text,
         );
+    }
+
+    private function setDate()
+    {
+        $first_day = '08-01-2021';
+        $today = date('d-m-Y');
+
+        $total = date_diff(date_create($first_day), date_create($today));
+        $this->prefix = $total->format('Day %R%a');
     }
 }
