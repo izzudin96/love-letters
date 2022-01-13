@@ -54,7 +54,7 @@ class SendQuoteToTelegram extends Command
      */
     public function fetchQuote()
     {
-        $this->client = new Client();
+        $this->client = new Client(['verify' => false]);
         $response = $this->client->request(
             'GET',
             self::API_URL . self::ENDPOINT . "?category=$this->category&language=en",
